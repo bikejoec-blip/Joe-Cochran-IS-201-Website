@@ -1,0 +1,87 @@
+/* 1. Overall page layout: flex column so footer can sit at bottom */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;   /* font family */
+    background-color: #dff3ff;                  /* custom background color */
+    color: #0f172a;                             /* font color */
+
+    display: flex;              /* make body a flex container */
+    flex-direction: column;     /* stack header, content, footer vertically */
+    align-items: center;        /* center the main column horizontally */
+}
+
+/* 2. Main wrapper divs (center column) */
+.header,
+.content,
+.footer {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    text-align: center;         /* center text inside each section */
+}
+
+/* 3. Footer section: centered AND pushed to bottom */
+.footer {
+    font-size: 0.9rem;
+    padding-bottom: 10px;
+    margin-top: auto;           /* pushes footer to bottom of page */
+}
+
+/* 4. Headings */
+h1 {
+    font-size: 3rem;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+/* 5. Lists: keep bullets readable but overall centered */
+ul, ol {
+    display: inline-block;      /* center the list block */
+    text-align: left;           /* but keep list text left inside the block */
+    margin: 10px 0;
+    padding-left: 1.5rem;
+}
+
+/* 6. Emphasized list items */
+.emphasizeText {
+    font-weight: bold;
+    color: #0f766e;             /* different font color */
+}
+
+/* 7. Paragraph */
+p {
+    font-size: 1.1rem;
+    margin: 20px 0;
+}
+
+/* 8. Image */
+img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+/* 9. Links and on‑page anchor buttons */
+a {
+    color: white;
+    background-color: #2563eb;
+    padding: 8px 14px;
+    border-radius: 999px;
+    text-decoration: none;
+    margin: 10px 6px;
+    display: inline-block;
+}
+
+a:hover {
+    background-color: #1d4ed8;
+}

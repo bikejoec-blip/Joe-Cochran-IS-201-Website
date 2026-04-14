@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <a href="FromScratch.html" class="nav-button">FromScratch</a>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Rider Matching Game</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: radial-gradient(circle at top, #1e293b, #0f172a);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        margin-top: 20px;
+        color: #38bdf8;
+    }
+
+    .game {
+        display: flex;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .column {
+        width: 260px;
+        background: rgba(255,255,255,0.06);
+        padding: 15px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+
+    .card {
+        padding: 12px;
+        margin: 10px 0;
+        background: rgba(255,255,255,0.08);
+        border-radius: 10px;
+        cursor: grab;
+        text-align: center;
+        border: 2px solid transparent;
+        transition: 0.2s;
+        font-weight: bold;
+    }
+
+    .card:hover {
+        border-color: #38bdf8;
+        transform: scale(1.03);
+    }
+
+    .slot {
+        padding: 18px;
+        margin: 12px 0;
+        border: 2px dashed rgba(255,255,255,0.4);
+        border-radius: 12px;
+        text-align: center;
+        min-height: 50px;
+    }
+
+    .matched {
+        background: rgba(34,197,94,0.2);
+        border-color: #22c55e;
+    }
+
+    #message {
+        margin-top: 20px;
+        font-size: 1.3rem;
+        color: #22c55e;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        background: #38bdf8;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🚴 Rider → Team Matching Game</h1>
+
+<div class="game">
+
+    <!-- RIDERS (will be shuffled) -->
+    <div class="column">
+        <h3>Riders</h3>
+        <div id="riderContainer"></div>
+    </div>
+
+    <!-- TEAMS -->
+    <div class="column">
+        <h3>Teams</h3>
+
+        <div class="slot" data-match="nino" data-label="Scott-SRAM MTB Racing">Scott-SRAM MTB Racing</div>
+        <div class="slot" data-match="alan" data-label="Giant Factory Racing">Giant Factory Racing</div>
+        <div class="slot" data-match="blevins" data-label="Specialized Factory Racing">Specialized Factory Racing</div>
+        <div class="slot" data-match="charlie" data-label="Cannondale Factory Racing">Cannondale Factory Racing</div>
+        <div class="slot" data-match="riley" data-label="Trek Factory Racing">Trek Factory Racing</div>
+
+    </div>
+
+</div>
+
+<div id="message"></div>
+<button onclick="resetGame()">Reset Game</button>
+
+<script>
+let dragged = null;
+
+// Rider data (source of truth)
+const riders = [
+    { id: "nino", name: "Nino Schurter" },
+    { id: "alan", name: "Alan Hatherly" },
+    { id: "blevins", name: "Christopher Blevins" },
+    { id: "charlie", name: "Charlie Aldridge" },
+    { id: "riley", name: "Riley Amos" }
+];
+
+// 🔀 shuffle helper
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+// render riders
+function renderRiders() {
+    const container = document.getElementById("riderContainer");
+    container.innerHTML = "";
+
+    shuffle(riders).forEach(rider => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.draggable = true;
+        div.id = rider.id;
+        div.textContent = rider.name;
+
+        div.addEventListener("dragstart", () => {
+            dragged = div;
+        });
+
+        container.appendChild(div);
+    });
+}
+
+// drag & drop for slots
+document.querySelectorAll(".slot").forEach(slot => {
+
+    slot.addEventListener("dragover", e => {
+        e.preventDefault();
+    });
+
+    slot.addEventListener("drop", () => {
+        if (!dragged) return;
+
+        if (slot.dataset.match === dragged.id) {
+            slot.textContent = dragged.textContent;
+            slot.classList.add("matched");
+            dragged.style.display = "none";
+            checkWin();
+        } else {
+            alert("❌ Wrong match!");
+        }
+    });
+});
+
+function checkWin() {
+    const slots = document.querySelectorAll(".slot");
+    const allMatched = [...slots].every(s => s.classList.contains("matched"));
+
+    if (allMatched) {
+        document.getElementById("message").textContent =
+            "🎉 You matched all riders correctly!";
+    }
+}
+
+function resetGame() {
+    // reset slots
+    document.querySelectorAll(".slot").forEach(slot => {
+        slot.classList.remove("matched");
+        slot.textContent = slot.dataset.label;
+    });
+
+    // reset message
+    document.getElementById("message").textContent = "";
+
+    // re-show riders + shuffle them
+    renderRiders();
+}
+
+// initial load
+renderRiders();
+</script>
+
+</body>
+</html>
